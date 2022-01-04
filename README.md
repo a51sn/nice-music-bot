@@ -13,7 +13,7 @@ It responds to 7 commands (all using the prefix "!nm"):
 - **uncheckred** - Removes all red box reactions in this channel.
 
 ## Setup
-To use this bot on your own server / with your own playlists, you'll need to register an application with both Discord and Spotify, and create a file named `.env` in the nice-music-bot directory that specifies the value of the following: 
+To use this bot on your own server / with your own playlists, you'll need to register an application with both [Discord](https://discord.com/developers/) and [Spotify](https://developer.spotify.com/dashboard/), and create a file named `.env` in the nice-music-bot directory that specifies the value of the following: 
 - `DISCORD_TOKEN` - found in Bot settings in the Discord Developer Portal
 - `CLIENT_ID` - in the Spotify for Developers > Dashboard > your application settings
 - `CLIENT_SECRET` - also in Spotify for Developers > Dashboard > your application settings
