@@ -74,4 +74,4 @@ After that, you should be able to do the following:
   - stop the bot with `sudo systemctl start nmbot`
   - view the log for erros with `journal -eu nmbot`
 
-This service runs in the background and restarts every 86400 seconds (1 day), which is what I wanted all along!
+This service runs in the background and restarts every 86400 seconds (1 day), which is what I wanted all along! Yay! 
