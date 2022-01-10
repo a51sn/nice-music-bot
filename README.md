@@ -1,5 +1,10 @@
 # nice-music-bot
-Discord bot that collects all the song links sent in a channel and adds them to a Spotify playlist.
+Discord bot that collects all the songs shared in a channel and adds them to a Spotify playlist.
+
+The name **nice music bot** comes from a channel called **#nice-music** in [Steve Kim](https://www.instagram.com/stvkmco/)'s Art Discord server, where people share song recs and links to Spotify tracks. I discovered a lot of cool new music through people's recommendations! But clicking those links & manually collecting the songs was slow and inconvenient, so I made this bot to help me out.
+
+Kinda scrappy, but I'm happy with it! As Robin Sloan says, ["an app can be a home-cooked meal."](https://www.robinsloan.com/notes/home-cooked-app/)
+
 
 ## Commands
 It responds to 9 commands (all using the prefix "!nm"):
@@ -7,7 +12,7 @@ It responds to 9 commands (all using the prefix "!nm"):
 - **collect**    - Adds all Spotify links in a channel to a playlist, reacts to messages with ✅  if it was successfully added.
 - **dedup**      - Remove duplicate tracks from the playlist.
 - **help**       - Lists all the commands with brief descriptions.
-- **leaderboard** - Displays leaderboard of users who shared the most songs in the channel!
+- **leaderboard** - Displays list of users who shared the most songs in the channel!
 - **link**       - Sends a link to the playlist in the channel.
 - **ping**       - Checks if bot is online.
 - **uncheck**    - Removes all ✅  reactions in this channel.
@@ -23,15 +28,17 @@ To use this bot on your own server / with your own playlists, you'll need to reg
 
 To add the bot to your server, go to Discord Developer Portal > OAuth2 > URL Generator, and under Scopes, check `bot` and under Bot Permissions, check `Read Messages`, `Send Messages`, `Manage Messages`, `Read Message History`, and `Add Reactions`, and send the URL to someone with administrator access to your server. 
 
-Then, run `bot.py`. You should see the message "Bot connected as {username of your bot}". Your bot will be online as long as this program continues running!
+Then, run `python3 bot.py`. You should see the message "Bot connected as {username of your bot}". Your bot will be online as long as this program continues running!
 
 ## Hosting! 
 I finally figured out how to make the bot available even when my laptop is not on to run the program! Here's how I did it.
 
-I set up an e2 micro VPS on Google Cloud Compute Engine (I chose this because it's within GCP's "always-free" tier! Alternatively, you could use other VPS providers like AWS, Azure, Digital Ocean,  etc). This allowed me to ssh into a VM where I cloned this repo, installed all the dependencies, and then looked for a way to keep bot.py running even after I logged out. I explored 3 different approaches before I found what worked best for me (skip to 3 if you're not interested in the process).
+First, I set up an e2 micro VPS on [Google Cloud Compute Engine](https://cloud.google.com/compute). I chose this because it's within GCP's "always-free" tier! Alternatively, you could use other VPS providers like AWS, Azure, Digital Ocean,  etc. 
+
+I ssh-ed into the VM and cloned this repo, installed all the dependencies, and then looked for a way to keep bot.py running even after I logged out. I explored 3 different approaches before I found what worked best for me ([_skip to the 3rd if you're not interested in hearing about my false starts!_](#3-creating-a-systemd-service)).
 
 ### **1. running bot.py within a separate tmux session**
-[Tmux](https://linuxize.com/post/getting-started-with-tmux/) stands for "terminal multiplexer", which is basically a tool that lets you create and access multiple, persistent terminal sessions from one screen. Normally, when you run a Python program from a terminal, you lose the ability to interact with the shell or close the terminal without interrupting the program. Tmux allows you to run the program from a separate terminal session and then "detach" from it, freeing up your terminal while letting bot.py continue to run in the background.
+[Tmux](https://linuxize.com/post/getting-started-with-tmux/) stands for "terminal multiplexer", a tool that lets you create and access multiple, persistent terminal sessions from one screen. Normally, when you run a Python program from a terminal, you lose the ability to interact with the shell or close the terminal without interrupting the program. Tmux allows you to run the program from a separate terminal session and then "detach" from it, freeing up your terminal while the program continues running in the background.
 
 I installed tmux with `sudo apt install tmux`. Then, I created a new session with `tmux a`, navigated to the repo folder, and ran `python3 bot.py`. Once I saw the confirmation message "Bot connected as {bot-username}", I detached with `Ctrl-b d` and then closed the window. Lastly, I checked to see if my bot was still online by pinging it from a Discord server I had added to, and it worked! 
 
@@ -72,6 +79,6 @@ After that, you should be able to do the following:
   - start the bot with `sudo systemctl start nmbot`
   - check the status with `systemctl status nmbot`
   - stop the bot with `sudo systemctl start nmbot`
-  - view the log for erros with `journal -eu nmbot`
+  - view the log for erros with `journalctl -eu nmbot`
 
 This service runs in the background and restarts every 86400 seconds (1 day), which is what I wanted all along! Yay! 
